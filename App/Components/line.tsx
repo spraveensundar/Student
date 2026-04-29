@@ -1,28 +1,30 @@
-import React, { useContext } from "react"
-import { StyleProp, View, ViewStyle } from "react-native"
-import useCustomHooks from "../Actions/Hooks/customhook"
-import { windowwidth } from "../Utilities/dimensions"
-import ThemeContext from "../Utilities/themecontext"
+import { StyleProp, View, ViewStyle } from 'react-native';
 
-interface Linecomponentprops {
-    width?: any,
-    height?: any,
-    backgroundcolor?: any,
-    containerstyle?: ViewStyle
+interface Lineprops {
+  width?: any;
+  height?: any;
+  conatainerstyle?: StyleProp<ViewStyle>;
+  top?: any;
 }
-
-
-const Linecomponent: React.FC<Linecomponentprops> = ({
-    width = windowwidth,
-    height = 1,
-    backgroundcolor,
-    containerstyle
+const Line: React.FC<Lineprops> = ({
+  width = '100%',
+  height = 1.25,
+  conatainerstyle,
+  top = 0,
 }) => {
-    const theme = useContext(ThemeContext)
-    return (
-        <View style={{ height: height, backgroundColor: backgroundcolor ?? theme.boderColor, width: width, alignSelf: "center", }} {...containerstyle} />
+  return (
+    <View
+      style={[
+        {
+          width: width,
+          height: height,
+          backgroundColor: '#CFCFCF',
+          marginTop: top,
+        },
+        conatainerstyle,
+      ]}
+    />
+  );
+};
 
-    )
-}
-
-export default Linecomponent
+export default Line;

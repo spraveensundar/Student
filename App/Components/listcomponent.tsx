@@ -1,4 +1,4 @@
-import { StyleProp, View, ViewStyle } from "react-native"
+import { StyleProp, View } from "react-native"
 import Card from "./Card"
 import Images from "../Utilities/images"
 import { windowwidth } from "../Utilities/dimensions"
@@ -8,7 +8,8 @@ import React from "react"
 import VectorIcons from "../Utilities/vectorIcons"
 
 interface Listcomponentprops {
-    src?: any
+    src?: any,
+    imagetype?: "image" | "svg";
     lefticonstyle?: StyleProp<ImageStyle>,
     lefticon?: React.ReactNode,
     title: string,
@@ -20,6 +21,7 @@ interface Listcomponentprops {
 
 const Listcomponent: React.FC<Listcomponentprops> = ({
     src,
+    imagetype = "image",
     lefticonstyle,
     lefticon,
     title,
@@ -27,14 +29,15 @@ const Listcomponent: React.FC<Listcomponentprops> = ({
     onpress,
     top = "5%"
 }) => {
+    console.log('imagetype', imagetype);
     return (
         <Card onPress={onpress} ispress={true} containerStyle={{ flexDirection: "row", alignItems: "center", width: "100%", padding: "2.5%", marginTop: top ? top : 0 }} >
             <View style={{ width: "15%", justifyContent: "center", alignItems: "center" }} >
                 {lefticon ?
                     lefticon :
                     <Images
-                        type="image"
-                        source={src}
+                        type={imagetype}
+                        {...(imagetype === "image" ? { source: src } : { name: src })}
                         width={windowwidth * 0.075}
                         height={windowwidth * 0.075}
                         style={lefticonstyle}

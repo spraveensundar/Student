@@ -1,60 +1,105 @@
-import { StyleSheet } from "react-native";
-
-import { Fontfamily } from "../../Utilities/uiasset";
-import { RFvalue, windowheight, windowwidth } from "../../Utilities/dimensions";
+import { StyleSheet } from 'react-native';
+import { Colors, Fontfamily, Fontsize } from '../../Utilities/uiasset';
+import { windowheight } from '../../Utilities/dimensions';
 
 const styles = (theme: any) => StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    header: {
-        color: theme.primarytext,
-        fontFamily: Fontfamily.medium,
-        fontSize: RFvalue(18),
-        width: "70%",
-        textAlign: "center"
-    },
     headerContainer: {
         height: windowheight * 0.1,
-        justifyContent: "center",
-        flexDirection: "row",
-        alignItems: "center"
+        paddingHorizontal: "6%",
+        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
-    rightContent: {
-        width: "15%",
-        height: "100%",
-        position: "absolute",
-        right: "5%",
-        justifyContent: "center",
-        alignItems: "center"
+    container: {
+
+        flexDirection: 'column',
+        gap: 4,
     },
-    content: {
-        width: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingHorizontal: "5%"
+    lgnButton: {
+        backgroundColor: '#F3F3F3',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 30,
+        fontFamily: Fontfamily.GMedium,
+        fontSize: Fontsize.medium,
+        alignItems: 'center',
+        width: '100%',
     },
-    buttonContainer: {
-        marginTop: "8%",
-        marginBottom: "5%"
+    lgnButtonTitle: {
+        fontSize: Fontsize.medium,
+        fontWeight: '600',
+        color: "black",
     },
-    continue: {
-        position: "absolute",
-        bottom: "2%",
-        left: 0,
-        right: 0
-    },
-    select: {
-        width: windowwidth * 0.065,
-        height: windowwidth * 0.065,
-        borderRadius: 100,
-        borderColor: theme.theme === "dark" ? "" : theme.boderColor,
+    phoneContainer: {
+        flexDirection: 'row',
         borderWidth: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        marginRight: 10
+        borderColor: '#ccc',
+        borderRadius: 25,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        alignItems: 'center',
+        marginVertical: 20,
+        width: "100%",
+    },
+    countrySection: {
+        flexDirection: 'row',
+        gap: 6,
+        alignItems: 'center',
+    },
+    flag: {
+        width: '25%',
+        height: undefined,
+        aspectRatio: 1,
+        marginRight: 5,
+    },
+    inputPhNo: {
+        fontSize: Fontsize.medium,
+        fontFamily: Fontfamily.GRegular,
+    },
+    title: {
+        color: Colors.grey,
+        fontFamily: Fontfamily.GMedium,
+        fontSize: Fontsize.medium,
+    },
+    otpContainer: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        gap: 20,
+    },
+    otpInputCnt: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 20,
+    },
+    otpInput: {
+        width: '40%',
+        height: '40%',
+        borderWidth: 1,
+        backgroundColor: theme.lightGrey,
+        borderRadius: 5,
+        fontSize: Fontsize.extralarge,
+    },
+    nextButton: {
+        backgroundColor: theme.btnColor,
+        borderRadius: 25,
+        paddingVertical: 13,
+        fontFamily: Fontfamily.GMedium,
+        fontSize: Fontsize.semilarge,
+    },
+    resendOtp: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    divider: {
+        width: 1,
+        height: '100%',
+        backgroundColor: '#ccc',
+        marginHorizontal: 5,
     }
-})
+
+});
 
 export default styles;

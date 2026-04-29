@@ -1,61 +1,61 @@
 import { RFvalue } from './dimensions';
 
 export const Fontfamily = {
-  bold: 'inter-Bold',
-  extrabold: 'inter-Extrabold',
-  light: 'inter-Light',
-  medium: 'inter-Medium',
-  regular: "inter-Regular",
-  semiBold: 'inter-Semibold',
-  thin: "inter-Thin"
+    bold: 'sans-bold',
+    light: 'sans-Light',
+    medium: 'sans-medium',
+    GLight: 'BasisGrotesqueArabicPro-Light',
+    GMedium: 'BasisGrotesqueArabicPro-Medium',
+    GBold: 'BasisGrotesqueArabicPro-Bold',
+    GBlack: 'BasisGrotesqueArabicPro-Black',
+    GRegular: 'BasisGrotesqueArabicPro-Regular'
 };
 
 export const Fontsize = {
-  semismall: RFvalue(9.5),
-  small: RFvalue(11.5),
-  semimedium: RFvalue(12.5),
-  medium: RFvalue(14),
-  semilarge: RFvalue(15),
-  large: RFvalue(19),
-  extralarge: RFvalue(20),
-  xxlarge: RFvalue(25),
-  xxxlarge: RFvalue(29),
-  tiny: RFvalue(13.5),
-  xsmall: RFvalue(11),
+    semismall: RFvalue(10),
+    small: RFvalue(11.5),
+    semimedium: RFvalue(12),
+    medium: RFvalue(14),
+    semilarge: RFvalue(16),
+    large: RFvalue(18),
+    extralarge: RFvalue(21),
+    xxlarge: RFvalue(25),
+    xxxlarge: RFvalue(29),
+    xxxxlarge: RFvalue(34),
+    tiny: RFvalue(3.5),
+    tinylarge: RFvalue(9),
+    xsmall: RFvalue(11),
+    xmedium: RFvalue(13),
+    xxmedium: RFvalue(15)
 };
 
 export const Colors = {
-  primary: '#303030',
-  bluecolor: '#7974FF',
-  bgcolor: '#D9D9D9',
-  graytext: "#9096A1",
-  btnBgGreen: "#279646",
-  btnBgGray: "#202225",
-  textWhite: "#fff",
-  textWBlack: "#000",
-  radionGreen: "#1DF81F",
-  white: "#ffffff",
-  black: "#111111",
-  green: "#279646",
-  orange: "#FF6501",
-  grey: "#93939B",
-  darkgray: "#292C31",
-  warmgrey: "#919191",
-  lightgreen: "#1DF81F",
-  pink: '#FF135B',
-  red: "#F24E53",
-  dustygrey: "#95959C",
-  homebg: "#202225",
-  tradegreen: "#16FF00",
-  datebg_txt: "#292B2F",
-  textNobel: "#B5B5B5",
-  stormGrey: "#6C757D",
-  lightGreen: "#189B64",
-  dune: "#2F2F2F"
+    white: "#ffffff",
+    black: "#000000",
+    lightGrey: '#F3F3F3',
+    grey: '#9C9C9C',
+    lightGreyy: '#A8A8A8',
+    yellow: '#FFA300',
+    darkyellow:'#E59200',
+    orange: '#FE5501',
+    green2: '#00A983',
+    green3: '#D3FFF5',
+    skyblue: '#0A7EA7',
+    skyblue1: '#D3F3FF',
+    purple: '#37019A',
+    purple1: '#EBE0FF',
+    green: "#009431",
+    primary: "#000C51",
+    pink: '#E2004F',
+    navyBlue: "#000C51",
+    lightGreen: "#38C274",
+    red: "#C2383A",
+    primary10: "#000C511A",
+    gray: "#404040",
 
 };
 
-
 export const limit = {
-  recent_tranaction: 8
+    recent_tranaction: 8
 }
+

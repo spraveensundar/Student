@@ -4,8 +4,8 @@ import { Fontfamily, Fontsize } from '../Utilities/uiasset';
 import ThemeContext from '../Utilities/themecontext';
 
 type AlignSelfOptions = 'auto' | 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
-type size = "semismall" | "small" | "semimedium" | "medium" | "semilarge" | "large" | "extralarge" | "xxlarge" | "xxxlarge" | "tiny" | "xsmall"
-type family = "bold" | "extrabold" | "light" | "medium" | "regular" | "semiBold" | "thin"
+type size = "semismall" | "small" | "semimedium" | "medium" | "semilarge" | "large" | "extralarge" | "xxlarge" | "xxxlarge" | "tiny" | "xsmall" | "xxmedium" | "xmedium" | "xxxxlarge" | "tinylarge"
+type family = "bold" | "light" | "medium" | "GLight" | "GMedium" | "GBold" | "GBlack" | "GRegular"
 
 interface Props {
     children?: React.ReactNode;
@@ -27,7 +27,7 @@ interface Props {
 
 const Text: React.FC<Props> = ({
     children,
-    fontfamily = Fontfamily.regular,
+    fontfamily = Fontfamily.bold,
     fontSize,
     align = 'auto',
     numoflines = 0,
@@ -36,19 +36,20 @@ const Text: React.FC<Props> = ({
     left = 0,
     textProps,
     size = "semimedium",
-    family = "regular",
+    family = "bold",
     color
 }) => {
     const theme = useContext(ThemeContext);
 
     return (
         <>
+
             <RNText
                 numberOfLines={numoflines}
                 style={[
 
                     {
-                        fontFamily: Fontfamily[family] ?? Fontfamily.regular,
+                        fontFamily: Fontfamily[family as keyof typeof Fontfamily] ?? Fontfamily.bold,
                         fontSize: fontSize ?? Fontsize[size],
                         alignSelf: align,
                         color: color ?? theme.primarytext,

@@ -1,271 +1,237 @@
-import React, { useState } from "react"
-import Mainview from "../../Components/mainview"
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { BottomTabParamList } from "../../Navigations/navigationtypes";
-import Card from "../../Components/Card";
-import { windowheight, windowwidth } from "../../Utilities/dimensions";
-import theme from "../../Utilities/theme";
-import useCustomHooks from "../../Actions/Hooks/customhook";
-import { Pressable, ScrollView, View } from "react-native";
-import Flexcomponent from "../../Components/flexcomponent";
-import Images from "../../Utilities/images";
-import VectorIcons from "../../Utilities/vectoricons";
-import { Dropdown, Input } from "../../Components/Field";
-import Text from "../../Components/text";
-import { FlatList } from "react-native-gesture-handler";
-import { Colors } from "../../Utilities/uiasset";
+import React, { useCallback, useState } from "react";
+import { Pressable, View } from 'react-native';
+import Mainview from "../../Components/mainview";
+import VectorIcons from "../../Utilities/vectorIcons";
+import Images, { icons } from "../../Utilities/images";
+import { windowwidth } from "../../Utilities/dimensions";
+import { useFocusEffect } from "@react-navigation/native";
+import { useLazyGetMySubscriptionPackagesListQuery } from "../../Common/redux/vehicleServiceHook";
+import { constantData } from "../../Common/constant";
+import OrderHistoryCard from "./dailycarwashorder";
+import { FlashList } from "@shopify/flash-list";
+import { limit } from "../../Utilities/uiasset";
+import { returnArrayOnly } from "../../Common/commonFunction";
+import { Text } from "react-native-elements";
+import OrderModal from "./orderModal";
 
 
-type Props = NativeStackScreenProps<BottomTabParamList, 'Orders'>;
+const defaultOrderData = {
+  page: 1,
+  limit: 10,
+  data: [],
+  isLoadMore: false,
+}
+const defaultTab = constantData.subscriptionFilter.active;
 
-const Orders: React.FC<Props> = () => {
-
-    const { theme, navigation } = useCustomHooks()
-    const [assetHistory, setAssetHistory] = useState(false)
-
-    const list = [
-        { contract: "BTCUSD", value: "Funding", balance: "143.25623", amount: "0.0351586", date: "Sep 18 2025, 05:31:22 PM" },
-        { contract: "BTCUSD", value: "Funding", balance: "143.25623", amount: "0.0351586", date: "Sep 18 2025, 05:31:22 PM" },
-        { contract: "BTCUSD", value: "Funding", balance: "143.25623", amount: "0.0351586", date: "Sep 18 2025, 05:31:22 PM" },
-    ];
-
-    const Orderlist = [
-        { name: "Symbol", contract: "BTCUSD", type: "Buy", qty: "1", remaining: "1/0" },
-        { name: "Side", contract: "BTCUSD", type: "Buy", qty: "2", remaining: "1/0" },
-        { name: "Qty (Lot)", contract: "BTCUSD", type: "Buy", qty: "1", remaining: "1/0" },
-        { name: "Filled/Remaining", contract: "BTCUSD", type: "Buy", qty: "1", remaining: "1/0" },
-    ];
-
-    const columns = [] = ["Symbol", "Side", "Qty", "Filled/Remaining"];
-
-    return (
-        <Mainview
-            isheader={false}
-            isbottomtab={true}
-        >
-
-            <View style={{ flex: 1 }}>
-
-                <Input
-                    type="search"
-                    label=""
-                    placeHolder="Search contracts"
-
-                    leftContent={
-                        <VectorIcons
-                            family="Feather"
-                            name={"search"}
-                            size={windowwidth * 0.05}
-
-                        />
-                    }
-                />
-
-                <Flexcomponent justifyContent="flex-start" alignItems="center" >
-
-                    <Pressable onPress={() => setAssetHistory(!assetHistory && true)} style={{ height: "auto", justifyContent: "center", alignItems: "center", width: "auto", }}>
-                        <Card containerStyle={{ justifyContent: "center", alignItems: "center", padding: 10, backgroundColor: !assetHistory ? "#fff" : "#202225" }}>
-                            <Text
-                                family="regular"
-                                size="small"
-                                style={{ paddingHorizontal: 15, }}
-                                color={assetHistory ? "#fff" : "#202225"}>Asset History</Text>
-                        </Card>
-                    </Pressable>
+const Orders: React.FC = () => {
 
 
-                    <Pressable onPress={() => setAssetHistory(!assetHistory && true)} style={{ height: "auto", justifyContent: "center", alignItems: "center", width: "auto", marginLeft: 10, }}>
-                        <Card containerStyle={{ justifyContent: "center", alignItems: "center", padding: 10, backgroundColor: assetHistory ? "#fff" : "#202225" }}>
-                            <Text
-                                family="regular"
-                                size="small"
-                                style={{ paddingHorizontal: 15, }}
-                                color={!assetHistory ? "#fff" : "#202225"}
-                            >Order History</Text>
-                        </Card>
-                    </Pressable>
+  const [visible, setVisible] = useState(false)
+
+  const [trigger, { isLoading }] = useLazyGetMySubscriptionPackagesListQuery();
 
 
-                </Flexcomponent>
 
-                <Flexcomponent justifyContent="space-between" alignItems="center" style={{ width: "100%", paddingTop: "5%" }}>
-
-                    <Pressable style={{ flex: 0.3, backgroundColor: theme.card, borderRadius: 8, padding: 10, flexDirection: "row", height: "auto", justifyContent: "center", width: "auto", }}>
-
-                        <Text
-                            family="regular"
-                            size="small"
-                        >Filter</Text>
-
-                        <VectorIcons
-                            family="Ionicons"
-                            name={"chevron-down-outline"}
-                            size={windowwidth * 0.05}
-                            style={{ marginLeft: 5 }}
-                        />
-
-                    </Pressable>
+  const [loadingStatus, setLoadingStatus] = useState({
+    noData: false,
+    overLapLoader: false,
+    mainLoader: false,
+    noDataContent: "No data found",
+    contentRendered: false,
+  })
+  const [tab, setTab] = useState([defaultTab]);
+  const [orders, setOrders] = useState({
+    [defaultTab]: {...defaultOrderData}
+  })
 
 
-                    <View style={{ flex: 0.6, flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
 
-                        <Pressable style={{ backgroundColor: theme.card, borderRadius: 8, padding: 10, flexDirection: "row", height: "auto", justifyContent: "flex-end", width: "auto", }}>
+  useFocusEffect(
+    useCallback(() => {
+      fetchMyPackageList(false, true);
+      return () => {
+        setLoadingStatus({
+          noData: false,
+          overLapLoader: false,
+          mainLoader: false,
+          noDataContent: "No data found",
+          contentRendered: false,
+        });
+        setOrders({ [defaultTab]: {...defaultOrderData} });
+        setTab([defaultTab]);
+      }
+    }, [])
+  )
 
-                            <Text
-                                family="regular"
-                                size="small"
-                            >Order History</Text>
+  const changeLoadingStatus = (statusObject: any) => {
+    setLoadingStatus({
+      ...loadingStatus,
+      ...statusObject,
+    });
+  }
 
-                            <VectorIcons
-                                family="Feather"
-                                name={"download"}
-                                size={windowwidth * 0.045}
-                                style={{ marginLeft: 5 }}
-                            />
+  const fetchMyPackageList = async (isRefresh?: boolean, initialCall?: boolean, tabName?: Array<string>) => {
 
-                        </Pressable>
-                        {!assetHistory ?
-                            <Card containerStyle={{ justifyContent: "flex-end", padding: 5, width: "auto", marginLeft: 10, backgroundColor: theme.card, }}>
-                                <VectorIcons
-                                    family="Feather"
-                                    name={"mail"}
-                                    iconcolor={theme.darktext}
-                                    size={windowwidth * 0.05}
-                                />
-                            </Card>
-                            : ""}
-                    </View>
+    tabName = tabName ? tabName : tab;
+    let staticKey = defaultTab;
+    console.log('sendDatasendDatatabNametabName',tabName,tab)
+    let page = isRefresh ? 1 : (orders?.[staticKey]?.page ? orders?.[staticKey]?.page : defaultOrderData?.page);
+    if (initialCall||(page==1&&!isRefresh)) {
+      changeLoadingStatus({
+        mainLoader: true,
+      })
+    }
+    if(isRefresh){
+      changeLoadingStatus({
+        overLapLoader: true,
+      })
+    }
 
+    let sendData = {
+      type: JSON.stringify(tabName),
+      page: page,
+      limit: defaultOrderData?.limit,
+    }
 
-                </Flexcomponent>
+    console.log('sendDatasendData',sendData)
 
-                {!assetHistory ?
-                    <FlatList
-                        data={list}
-                        keyExtractor={(item, index) => index.toString()}
-                        style={{ marginTop: 20, }}
-                        contentContainerStyle={{ paddingBottom: 50 }}
-                        showsVerticalScrollIndicator={false}
-                        renderItem={({ item }) => (
-                            <Card containerStyle={{ padding: 15, marginBottom: 10, backgroundColor: theme.card, }}>
+    let resp = await trigger(sendData);
 
-                                <Flexcomponent justifyContent="space-between" alignItems="center" >
-                                    <View style={{ flex: 0.5, }}>
-                                        <Text family="regular" size="semimedium" color={Colors.graytext} >Contract</Text>
-                                        <Text family="medium" size="semimedium" style={{ marginTop: 3 }} >{item?.contract}</Text>
-                                    </View>
-                                    <View style={{ flex: 0.5, alignItems: "flex-end" }}>
-                                        <Text family="regular" size="semimedium" color={Colors.graytext} >Type</Text>
-                                        <Text family="medium" size="semimedium" style={{ marginTop: 3 }} >{item?.value}</Text>
-                                    </View>
+    console.log('sendDatasendDataresp',resp)
+    const response = resp?.data;
 
-                                </Flexcomponent>
+    let setData: any = {
+      page: page + 1,
+      limit: sendData?.limit,
+      data: [],
+      isLoadMore: false,
+    }
 
-                                <Flexcomponent justifyContent="space-between" alignItems="center" style={{ marginTop: 10 }} >
-                                    <View style={{ flex: 0.5, }}>
-                                        <Text family="regular" size="semimedium" color={Colors.graytext} >Amount</Text>
-                                        <Text family="medium" size="semimedium" style={{ marginTop: 3 }}>{item?.contract}</Text>
-                                    </View>
-                                    <View style={{ flex: 0.5, alignItems: "flex-end" }}>
-                                        <Text family="regular" size="semimedium" color={Colors.graytext} >Wallet Balance</Text>
-                                        <Text family="medium" size="semimedium" style={{ marginTop: 3 }}>{item?.value}</Text>
-                                    </View>
-
-                                </Flexcomponent>
-
-                                <Text family="regular" size="small" color="#9899A0" style={{ width: "60%", textAlign: "center", padding: 6, marginTop: 10, backgroundColor: theme.datebgColor, borderRadius: 5, }} >{item?.date}</Text>
-
-                            </Card>
-                        )}
-                        ListEmptyComponent={() => (
-
-                            <View style={{ height: windowheight * 0.5, justifyContent: "center", alignItems: "center", }} >
-                                <Text family="medium" size="small" style={{ marginTop: 10 }} >No Data Found</Text>
-                            </View>
-
-                        )}>
-
-                    </FlatList>
-
-                    :
-
-                    <>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }}>
-                            <View style={{ flex: 1, minWidth: columns.length * 120, marginLeft: -25 }} >
-
-                                {/* Header */}
-                                <Flexcomponent
-                                    alignItems="center"
-                                    justifyContent="flex-start"
-                                    style={{
-                                        width: "100%",
-                                        paddingVertical: 8,
-                                        marginTop: 20,
-                                        borderBottomWidth: 0.5,
-                                        borderColor: Colors.graytext,
-                                    }}
-                                >
-                                    {columns.map((col, index) => (
-                                        <Text
-                                            key={index}
-                                            family="regular"
-                                            size="semimedium"
-                                            color={Colors.warmgrey}
-                                            style={{
-                                                width: 120,        // 👈 same width as row
-                                                textAlign: "center", // 👈 same alignment as row
-                                                fontWeight: "600",
-                                            }}
-                                        >
-                                            {col}
-                                        </Text>
-                                    ))}
-                                </Flexcomponent>
-
-                                {/* FlatList */}
-                                <FlatList
-                                    data={Orderlist}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    showsVerticalScrollIndicator={false}
-                                    style={{ marginTop: 5 }}
-                                    renderItem={({ item }) => (
-                                        <Flexcomponent
-                                            alignItems="center"
-                                            justifyContent="flex-start"  // 👈 match header
-                                            style={{
-                                                width: "100%",
-                                                paddingVertical: 10,
-                                            }}
-                                        >
-                                            <Text family="regular" size="semimedium" color={theme.primarytext} style={{ width: 120, textAlign: "center" }}>
-                                                {item.contract}
-                                            </Text>
-                                            <Text family="regular" size="semimedium" color={theme.primarytext} style={{ width: 120, textAlign: "center" }}>
-                                                {item.type}
-                                            </Text>
-                                            <Text family="regular" size="semimedium" color={theme.primarytext} style={{ width: 120, textAlign: "center" }}>
-                                                {item.qty}
-                                            </Text>
-                                            <Text family="regular" size="semimedium" color={theme.primarytext} style={{ width: 120, textAlign: "center" }}>
-                                                {item.remaining}
-                                            </Text>
-                                        </Flexcomponent>
-                                    )}
-                                />
-                            </View>
-                        </ScrollView>
-                    </>
+    if (sendData?.page == 1) {
+      setData.data = returnArrayOnly(response?.data);
+    }
+    else {
+      setData.data = [
+        ...returnArrayOnly(orders?.[staticKey]?.data),
+        ...returnArrayOnly(response?.data)
+      ];
+    }
+    setData.isLoadMore = returnArrayOnly(response?.data).length >= defaultOrderData?.limit ? true : false;
 
 
-                }
+    setOrders({
+      ...(initialCall?{}:orders),
+      ...{
+        [staticKey]: setData,
+      },
+    });
+
+    changeLoadingStatus({
+      mainLoader: false,
+      overLapLoader: false,
+    })
+  }
+
+  const onRefresh = () => {
+    if (
+      !loadingStatus.mainLoader
+    ) {
+      fetchMyPackageList(true)
+    }
+  }
+
+  const onTabChange = (tabName: Array<string>) => {
+    setTab(tabName);
+    fetchMyPackageList(true, false, tabName);
+  }
+
+  const onEndReached = () => {
+    if (
+      !loadingStatus.mainLoader
+      &&
+      loadingStatus?.contentRendered
+      &&
+      orders?.[defaultTab]?.isLoadMore
+    ) {
+      fetchMyPackageList()
+    }
+  }
+
+  const onContentSizeChange = (w: number, h: number) => {
+    if (h > 1) {
+      changeLoadingStatus({
+        contentRendered: true,
+      })
+    }
+    else if (h < 1 && !loadingStatus.mainLoader) {
+      changeLoadingStatus({
+        contentRendered: true,
+      })
+    }
+  };
+
+  const data = [1, 2, 3, 4, 5, 6]
+  const isDisabled = orders?.[defaultTab]?.data?.length <= 0;
+
+  console.log('ordersorders',orders,tab)
+  return (
+    <>
+      <Mainview
+        headertitle="Order History"
+        lefticon={<></>}
+        horizontalpadding={"4%"}
+        // filter={true}
+        rightfn={
+          <Pressable
+            // disabled={isDisabled}
+            onPress={() => setVisible(true)}
+          >
+            <VectorIcons
+              family="Ionicons"
+              name="options-outline"
+              // iconcolor={isDisabled ? "#999" : "#000"}
+              iconcolor={"#000"}
+            />
+          </Pressable>
+        }
+        ismainloading={loadingStatus.mainLoader}
+        isoverlaploader={loadingStatus.overLapLoader}
+        isnodata={orders?.[defaultTab]?.data?.length <= 0 ? true : false}
+      >
+        <View style={{ paddingTop: "2.5%", flex: 1 }} >
+          <FlashList
+            estimatedItemSize={80}
+            onEndReachedThreshold={0.3}
+            data={orders?.[defaultTab]?.data}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item, index }) => (
+              <OrderHistoryCard
+                data={item}
+              />
+            )}
+            onEndReached={() => onEndReached()}
+            onRefresh={() => onRefresh()}
+            refreshing={loadingStatus.mainLoader}
+            onContentSizeChange={(w, h) => onContentSizeChange(w, h)}
+          />
+        </View>
 
 
-            </View>
-
-
-        </Mainview >
-    )
-
+      </Mainview>
+      {
+        visible
+        ?
+        <OrderModal
+          visible={visible}
+          setVisible={setVisible}
+          onSelect={onTabChange}
+          selectedFilter={tab}
+        />
+        :
+        <></>
+      }
+    </>
+  )
 }
 
-export default Orders
+export default Orders;

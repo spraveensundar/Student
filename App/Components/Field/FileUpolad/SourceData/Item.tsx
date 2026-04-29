@@ -1,19 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Pressable } from 'react-native';
 
 import Text from '../../../text';
 import { Colors } from '../../../../Utilities/uiasset';
-import VectorIcons from '../../../../Utilities/vectoricons';
-import ThemeContext from '../../../../Utilities/themecontext';
 import { windowwidth } from '../../../../Utilities/dimensions';
+import VectorIcons from '../../../../Utilities/vectorIcons';
 
 type ItemType = {
   name?: string;
   family?: any;
   label: 'camera' | 'gallery' | 'document' | string;
   text?: any
-
-
 };
 
 type ItemProps = {

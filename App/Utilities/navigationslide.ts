@@ -1,4 +1,3 @@
-import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import {
   StackCardInterpolationProps,
   StackCardStyleInterpolator,
@@ -28,48 +27,17 @@ export const MyTransition = {
     };
   },
 };
-export function getFadeanimation(): NativeStackNavigationOptions {
-  // const { theme } = useCustomHooks();
 
-  return {
-    gestureEnabled: false,
-    //animation: 'fade',
-    headerShown: false,
-    // contentStyle: {
-    //   backgroundColor: theme.backgroundcolor,
-    // },
-  };
-}
-
-
-
-export const BottomSheetTransition = {
-  gestureDirection: "vertical" as const,
+export const FadeTransition = {
+  gestureDirection: "horizontal" as const,
   headerShown: false,
-  presentation: "transparentModal" as const, // important for overlay effect
   transitionSpec: {
-    open: TransitionSpecs.TransitionIOSSpec,
-    close: TransitionSpecs.TransitionIOSSpec,
+    open: TransitionSpecs.FadeInFromBottomAndroidSpec,
+    close: TransitionSpecs.FadeOutToBottomAndroidSpec,
   },
-  cardStyleInterpolator: ({ current, layouts }: StackCardInterpolationProps) => {
-    const translateY = current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [layouts.screen.height, layouts.screen.height * 0.3], 
-    });
-
-    return {
-      cardStyle: {
-        transform: [{ translateY }],
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        overflow: "hidden",
-      },
-      overlayStyle: {
-        opacity: current.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 0.5], // dim background
-        }),
-      },
-    };
-  },
+  cardStyleInterpolator: ({ current }: StackCardInterpolationProps) => ({
+    cardStyle: {
+      opacity: current.progress,
+    },
+  }),
 };

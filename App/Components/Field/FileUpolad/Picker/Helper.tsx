@@ -28,7 +28,7 @@ export const mediaConfiguration = {
         width: 216,
         height: 216,
         cropping: true,
-        multiple: false,
+        multiple: true,
         cropperCircleOverlay: true,
         mediaType: 'photo',
         cropperToolbarTitle: 'Move and Scale',
@@ -92,17 +92,26 @@ export const imagePick = ({
 };
 
 
-export function shortenFileName(fileName: string, maxLength = 10) {
-    const lastDotIndex = fileName.lastIndexOf('.');
-    if (lastDotIndex === -1) return fileName; // no extension
+export function shortenFileName(fileName?: string, maxLength = 10) {
+    // Handle null, undefined, or non-string inputs
+    if (typeof fileName !== "string" || fileName.trim() === "") {
+        return "unknown_file";
+    }
 
-    const name = fileName.substring(0, lastDotIndex); // before extension
-    const extension = fileName.substring(lastDotIndex); // .jpg, .png, etc.
+    const lastDotIndex = fileName.lastIndexOf(".");
 
-    // Shorten the name without adding extra dots
-    const shortName = name.length > maxLength
-        ? name.substring(0, maxLength) // no extra dot
-        : name;
+    // No extension or malformed filename
+    if (lastDotIndex === -1 || lastDotIndex === 0) {
+        return fileName.length > maxLength
+            ? fileName.substring(0, maxLength)
+            : fileName;
+    }
+
+    const name = fileName.substring(0, lastDotIndex);
+    const extension = fileName.substring(lastDotIndex);
+
+    const shortName =
+        name.length > maxLength ? name.substring(0, maxLength) : name;
 
     return shortName + extension;
 }

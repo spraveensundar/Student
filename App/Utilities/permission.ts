@@ -52,7 +52,7 @@ export const checkGalleryPermission = async (): Promise<PermissionStatus> => {
 
 export const NotificationPermission = async () => {
     try {
-        if (Platform.OS === "android") {
+        if (Platform.OS === "android" && Platform.Version >= 33) {
             // ✅ Android 13+ requires POST_NOTIFICATIONS permission
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS

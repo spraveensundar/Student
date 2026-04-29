@@ -1,247 +1,216 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Stacknavigationtypes } from "./stacknavigationtypes";
-import Login from "../Screens/Auth/login";
-import { FadeTransition } from "../Utilities/navigationslide";
-import OTP from "../Screens/Auth/OTP";
-import Termsandcondtions from "../Screens/Auth/terms";
-import Categories from "../Screens/Category/categories";
-import CleaningResiter from "../Screens/Auth/cleaningRegister/register";
-import Aadharverification from "../Screens/Auth/cleaningRegister/aadharverification";
-import Selfie from "../Screens/Auth/cleaningRegister/selfie";
-import UpdateLocation from "../Screens/Others/Location/updateLocation";
-import FetchLocation from "../Screens/Others/Location/fetchLocation";
-import Successreg from "../Screens/Auth/cleaningRegister/successreg";
-import Manualverification from "../Screens/Auth/cleaningRegister/manualverification";
-import Vendorhome from "./drawernavigation";
-import Servicerequest from "../Screens/Commoncarwash/Servicerequest/servicerequest";
-import Profile from "../Screens/Commoncarwash/Myprofile/profile";
-import Editprofile from "../Screens/Commoncarwash/Myprofile/editprofile";
-import Earnings from "../Screens/Commoncarwash/Earnings/earnings";
-import SupportPartnerRegister from "../Screens/Category/RTO/SupportPartnerRegister";
-import SupportPartnerConfirmation from "../Screens/Category/RTO/SupportPartnerConfirmation";
-import ContactUs from "../Screens/Category/RTO/ContactUs";
-import JobDetails from "../Screens/Commoncarwash/Jobdetail/JobDetails";
-import Servicedetail from "../Screens/Commoncarwash/Servicedetails/servicedetails";
-import Completejob from "../Screens/Commoncarwash/Completejob/complete";
-import Reviews from "../Screens/Commoncarwash/Completejob/reviews";
-import Finalwash from "../Screens/Commoncarwash/Completejob/finalwash";
-import ScrapDealerRegister from "../Screens/Category/Scrap/ScrapDealerRegister";
-import ScrapDealerConfirmation from "../Screens/Category/Scrap/ScrapDealerConfirmation";
-import CertificateUpload from "../Screens/Category/Scrap/CertificatesUpload";
-import ScrapDealerApproval from "../Screens/Category/Scrap/ScrapDealerApproval";
-import ScrapDealerEditProfile from "../Screens/Category/Scrap/ScrapDealerEditProfile";
-import PickupDetails from "../Screens/Category/Scrap/PickupDetails";
-import PickupReschedule from "../Screens/Category/Scrap/PickupReschedule";
-import ScrapOrderHistory from "../Screens/Category/Scrap/ScrapOrderHistory";
-import MyBids from "../Screens/Category/Scrap/MyBids";
-import ScrapNotifications from "../Screens/Category/Scrap/ScrapNotifications";
-import ScrapDetails from "../Screens/Category/Scrap/ScrapDetails";
-import Addonjobdetail from "../Screens/Commoncarwash/Addon/addonjobdetail";
-import Addonservicedetail from "../Screens/Commoncarwash/Addon/addonservicedetail";
-import Bookingdetail from "../Screens/Commoncarwash/Bookings/bookingdetail";
-import Refferal from "../Screens/Commoncarwash/Reffer/refferal";
-import Notification from "../Screens/Commoncarwash/Notification/notification";
-import Chooselangugae from "../Screens/Others/Common/chooselanguage";
-import LeaveAttendance from "../Screens/Commoncarwash/LeaveAttendance/LeaveAttendance";
-import ApplyLeave from "../Screens/Commoncarwash/LeaveAttendance/ApplyLeave";
-import LeaveConfirmation from "../Screens/Commoncarwash/LeaveAttendance/LeaveConfirmation";
-import { askLocationPermission } from "../Utilities/permission";
-import { Getaddressdetail, getCurrentLocation } from "../Actions/location/location";
-import useCustomHooks, {
-    // Deviceinfo
-} from "../Actions/Hooks/customhook";
-
-import { setCurrentlocation, update_onetimewashstate, update_servicestype } from "../Slices/helper";
-import UpdateBank from "../Screens/Auth/BankDetails/UpdateBank";
-import { useSelector } from "react-redux";
-import { clearservice, persistorSelector, update_serviceinprogress } from "../Slices/persistor";
-import { destroyStorage, getItem } from "../Actions/Storage/localStorage";
-import { setSelectedserivce } from "../Slices/cleaning";
-import Test from "../Screens/Test/test";
-import { useLazyGetservicedetailQuery } from "../Slices/services";
-import ChatBox from "../Screens/Commoncarwash/chatBox/chatBox";
-import { setScrapperDetails, useLazyGetScrapperDetailsQuery } from "../Slices/scrap";
+import React, { useCallback } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Stacknavigationtypes } from './stacknavigationtypes';
+import FetchLocation from '../Screens/Location/fetchLocation';
+import UpdateLocation from '../Screens/Location/updateLocation';
+import Login from '../Screens/Auth/login';
+import OTP from '../Screens/Auth/OTP';
+import { FadeTransition } from '../Utilities/navigationslide';
+import Home from '../Screens/Home/home';
+import Bottomtab from './bottomtab';
+import RTOService from '../Screens/Services/RTO';
+import RCTransfer from '../Screens/Services/RTO/RCTransfer';
+import RCDocument from '../Screens/Services/RTO/RCDocument';
+import CleaningService from '../Screens/Services/CleaningService/cleaningService';
+// import SelectVehicle from '../Screens/Services/CleaningService/selectVehicle';
+import Subscription from '../Screens/Subscription/subscription';
+import Premium from '../Screens/Subscription/premium';
+import TimeSlot from '../Screens/Subscription/timeSlot';
+import CustomerDetails from '../Screens/Subscription/customerDetails';
+import Payment from '../Screens/Payment/payment';
+import Coupon from '../Screens/Payment/coupon';
+import PlaceOrder from '../Screens/Payment/placeOrder';
+import CarScrapping from '../Screens/Services/CarScrapping';
+import ScrappingDetails from '../Screens/Services/CarScrapping/Details/Vehicle';
+import ScrappingPerson from '../Screens/Services/CarScrapping/Details/Person';
+import ScrappingAddress from '../Screens/Services/CarScrapping/Details/Address';
+import ScrappingPicture from '../Screens/Services/CarScrapping/Details/Pictures';
+import ScrapStatus from '../Screens/Services/CarScrapping/ScrapStatus';
+import Faq from '../Screens/Faq/faq';
+import Booking from '../Screens/Booking/Booking/booking';
+import OrderHistory from '../Screens/Booking/Booking/orderHistory';
+import OrderDetails from '../Screens/Booking/ViewDetails/orderDetails';
+import TrackOrder from '../Screens/Booking/ViewDetails/trackOrder';
+import Review from '../Screens/Booking/ViewDetails/review';
+import OrderActivity from '../Screens/Booking/WatchActivity/orderActivity';
+import AddOns from '../Screens/Booking/WatchActivity/addOns';
+import PayNow from '../Screens/Booking/WatchActivity/payNow';
+import WatchActivity from '../Screens/Booking/WatchActivity/watchActivity';
+import OnTimeClean from '../Screens/Services/CleaningService/onTimeClean';
+import DriverOnDemand from '../Screens/DriverOnDemand/DriverOnDemand';
+import TestScreen from '../Screens/TestScreen';
+import OneWayRideScreen from '../Screens/DriverOnDemand/OneWayRideScreen';
+import SearchLocation from '../Screens/DriverOnDemand/SearchLocation';
+import RequestDriver from '../Screens/DriverOnDemand/RequestDriver';
+import SubscriptionPlan from '../Screens/Profile/Components/SubscriprionPlan/subscriptionPlan';
+import ContactUs from '../Screens/Profile/Components/ContactUs/contactUs';
+import VehicleManage from '../Screens/Profile/Components/VehicleManage/vehicleManage';
+import ServiceDetails from '../Screens/Profile/Components/ServiceDetails/serviceDetails';
+import MyAddress from '../Screens/Profile/Components/MyAddress/myAddress';
+import ReferEarn from '../Screens/Profile/Components/ReferEarn/referEarn';
+import MyProfile from '../Screens/Profile/Components/MyProfile/myProfile';
+import CancelSubscription from '../Screens/Profile/Components/SubscriprionPlan/cancelSubscription';
+import FeedbackRatings from '../Screens/Profile/Components/ServiceDetails/feedbackRatings';
+import RenewServices from '../Screens/Profile/Components/ServiceDetails/renewServices';
+import UpgradePlan from '../Screens/Profile/upgradePlan';
+import DailyTracking from '../Screens/Profile/Components/ServiceDetails/dailyTracking';
+import TrackingDetails from '../Screens/Profile/Components/ServiceDetails/trackingDetails';
+import CleanerAttendance from '../Screens/Profile/Components/ServiceDetails/cleanerAttendance';
+import BookingSuccess from '../Screens/DriverOnDemand/Components/BookingSuccess';
+import BookingDetail from '../Screens/DriverOnDemand/BookingDetail';
+import RiderDetail from '../Screens/DriverOnDemand/RiderDetail';
+import MyRide from '../Screens/DriverOnDemand/MyRide';
+import Notifications from '../Screens/DriverOnDemand/Notifications';
+import RideDetail from '../Screens/DriverOnDemand/RideDetail';
+import AddVehicleType from '../Screens/Profile/Components/VehicleManage/addVehicleType';
+import CustomerDetail from '../Screens/DriverOnDemand/CustomerDetail';
+import Reschedule from '../Screens/DriverOnDemand/Reschedule';
+import RescheduleUpdate from '../Screens/Booking/ViewDetails/rescheduleUpdate';
+import HomeNotification from '../Screens/Notification/homeNotification';
+import CleaningServiceDetails from '../Screens/Subscription/cleaningServiceDetails';
+import ChatBox from '../Screens/Booking/chatBox';
+import LiveLocation from '../Screens/Profile/Components/MyAddress/liveLocation';
+import ChallanCqPayment from '../Screens/ChallanCqPayment/challanCqPayment';
+import PaymentSummery from '../Screens/ChallanCqPayment/paymentSummery';
+import PaymentNow from '../Screens/ChallanCqPayment/paymentNow';
+import challanID from '../Screens/ChallanCqPayment/challanID';
+import DrawerNavigator from './drawernavigation';
+import ScrapBookingHistory from '../Screens/Services/CarScrapping/ScrapBookingHistory';
+import ScrapNotifications from '../Screens/Services/CarScrapping/ScrapNotifications';
+import ScrapPostList from '../Screens/Services/CarScrapping/ScrapPostList';
+import ScrapPostDetails from '../Screens/Services/CarScrapping/ScrapPostDetails';
+import BiddingDetails from '../Screens/Services/CarScrapping/BiddingDetails';
+import ScrapPickupScheldule from '../Screens/Services/CarScrapping/ScrapPickupSchedule';
+import FASTagProvider from '../Screens/Services/FASTag/FASTagProvider';
+import VehicleForm from '../Screens/Services/FASTag/VehicleForm';
+import Recharge from '../Screens/Services/FASTag/Recharge';
+import RechargeDetails from '../Screens/Services/FASTag/RechargeDetails';
+import FASTagStatus from '../Screens/Services/FASTag/FASTagStatus';
+import BiddingRequest from '../Screens/Services/CarScrapping/BiddingRequest';
+import { useFocusEffect } from '@react-navigation/native';
+import { loginCheck } from '../Common/commonFunction';
+import AboutCarigato from '../Screens/Faq/Components/AboutCarigato/aboutCarigato';
+import ServiceQuery from '../Screens/Faq/Components/ServiceQuery/serviceQuery';
+import Feedback from '../Screens/Faq/Components/Feedback/feedback';
+import Warrenty from '../Screens/Faq/Components/Warrenty/warrenty';
+import RideChatBox from '../Screens/DriverOnDemand/RideChatBox';
+import UpdateCertificate from '../Screens/Services/CarScrapping/UpdateCertificate';
 
 const Stack = createNativeStackNavigator<Stacknavigationtypes>();
 
 const Stacknavigator: React.FC = () => {
 
-    const { dispatch, navigation } = useCustomHooks();
-
-    const [initialroute, setInitialroute] = useState<any>("")
-    const getlivelocation = useCallback(async () => {
-        try {
-            const granted = await askLocationPermission();
-            if (!granted) {
-                console.warn("Location permission denied");
-                return;
-            }
-
-            const coords: any = await getCurrentLocation();
-
-            const label = await Getaddressdetail(coords.latitude, coords?.longitude)
-
-            const payload = {
-                coordinates: coords,
-                labeladdress: label?.formatedaddress
-            }
-            dispatch(setCurrentlocation(payload))
-        } catch (err) {
-            console.warn("Location error:", err);
-        }
-    }, [dispatch]);
-
-    useEffect(() => {
-        getlivelocation();
-    }, [getlivelocation])
-
-    const { serviceinprogress, persistservice, isaddonservice } = useSelector(persistorSelector)
-
-    const [getservicedetail] = useLazyGetservicedetailQuery()
-    const [scrapUserDetails] = useLazyGetScrapperDetailsQuery();
-
-    const checkroutes = useCallback(async () => {
-        try {
-            const token = await getItem("token");
-
-            if (!token) {
-                setInitialroute("Chooselangugae");
-                return;
-            }
-
-            const response = serviceinprogress?._id ? await getservicedetail({ serviceId: serviceinprogress._id }) : null;
-
-            try {
-                const scrapRes = await scrapUserDetails(0).unwrap();
-
-                dispatch(setScrapperDetails(scrapRes?.data))
-
-                if (scrapRes?.status) {
-                    const verification = scrapRes?.data?.verificationStatus;
-
-                    if (verification?.information === "pending") {
-                        setInitialroute("ScrapDealerRegister");
-                        return;
-                    }
-
-                    if (verification?.facilityFiles === "pending") {
-                        setInitialroute("CertificateUpload");
-                        return;
-                    }
-
-                    if (verification?.information === "submitted" && verification?.facilityFiles === "submitted") {
-                        setInitialroute("ScrapDealerApproval");
-                        return;
-                    }
-                    if (scrapRes?.data?.isVerified === true) {
-                        setInitialroute("Vendorhome")
-                        return
-                    }
-                }
-            } catch (err) {
-                console.log("Scrap user not found, continue normal flow");
-            }
-
-            const service = response?.data?.data;
-
-            if (isaddonservice && token) {
-                setInitialroute("Addonservicedetail")
-            }
-            else if (persistservice === "onetimewash" && service?.status == "pending" && token) {
-                setInitialroute("Vendorhome")
-                dispatch(update_servicestype(persistservice))
-                dispatch(update_onetimewashstate("accept"))
-                dispatch(setSelectedserivce(service))
-                dispatch(update_serviceinprogress(service))
-
-            }
-            else if (service?.status == "started" && token) {
-                setInitialroute("Servicedetail")
-                dispatch(setSelectedserivce(service))
-                dispatch(update_serviceinprogress(service))
-                dispatch(update_servicestype(persistservice ?? "dailywash"))
-            }
-
-            else if (token && (persistservice != "none")) {
-                dispatch(update_servicestype(persistservice ?? "dailywash"))
-                setInitialroute("Vendorhome")
-            }
-            else {
-                setInitialroute("Chooselangugae")
-            }
-        } catch (error) {
-        }
-    }, [isaddonservice, serviceinprogress, persistservice])
-
-    useEffect(() => {
-        checkroutes()
-    }, [checkroutes])
-
-    if (!initialroute) {
-        return null
-    }
-
-    console.log("initialroute", initialroute)
 
 
-
-    return (
-        <Stack.Navigator
-            screenOptions={FadeTransition}
-            initialRouteName={initialroute}
-        // initialRouteName="ChatBox"
-        >
-            <Stack.Screen name={"Test"} component={Test} />
-            <Stack.Screen name={"Chooselangugae"} component={Chooselangugae} />
-            <Stack.Screen name={"Login"} component={Login} />
-            <Stack.Screen name={"OTP"} component={OTP} />
-            <Stack.Screen name={"Termsandcondtions"} component={Termsandcondtions} />
-            <Stack.Screen name={"Categories"} component={Categories} />
-            <Stack.Screen name={"CleaningResiter"} component={CleaningResiter} />
-            <Stack.Screen name={"SupportPartnerRegister"} component={SupportPartnerRegister} />
-            <Stack.Screen name={"SupportPartnerConfirmation"} component={SupportPartnerConfirmation} />
-            <Stack.Screen name={"ContactUs"} component={ContactUs} />
-            <Stack.Screen name={"ScrapDealerRegister"} component={ScrapDealerRegister} />
-            <Stack.Screen name={"ScrapDealerConfirmation"} component={ScrapDealerConfirmation} />
-            <Stack.Screen name={"CertificateUpload"} component={CertificateUpload} />
-            <Stack.Screen name={"ScrapDealerApproval"} component={ScrapDealerApproval} />
-            <Stack.Screen name={"ScrapDealerEditProfile"} component={ScrapDealerEditProfile} />
-            <Stack.Screen name={"ScrapDetails"} component={ScrapDetails} />
-            <Stack.Screen name={"PickupDetails"} component={PickupDetails} />
-            <Stack.Screen name={"PickupReschedule"} component={PickupReschedule} />
-            <Stack.Screen name={"ScrapOrderHistory"} component={ScrapOrderHistory} />
-            <Stack.Screen name={"MyBids"} component={MyBids} />
-            <Stack.Screen name={"ScrapNotifications"} component={ScrapNotifications} />
-            <Stack.Screen name={"Aadharverification"} component={Aadharverification} />
-            <Stack.Screen name={"Selfie"} component={Selfie} />
-            <Stack.Screen name={"UpdateLocation"} component={UpdateLocation} />
-            <Stack.Screen name={"FetchLocation"} component={FetchLocation} />
-            <Stack.Screen name={"Successreg"} component={Successreg} />
-            <Stack.Screen name={"Manualverification"} component={Manualverification} />
-            <Stack.Screen name={"Vendorhome"} component={Vendorhome} />
-            <Stack.Screen name={"Servicerequest"} component={Servicerequest} />
-            <Stack.Screen name={"JobDetails"} component={JobDetails} />
-            <Stack.Screen name={"Profile"} component={Profile} />
-            <Stack.Screen name={"Editprofile"} component={Editprofile} />
-            <Stack.Screen name={"Earnings"} component={Earnings} />
-            <Stack.Screen name={"LeaveAttendance"} component={LeaveAttendance} />
-            <Stack.Screen name={"ApplyLeave"} component={ApplyLeave} />
-            <Stack.Screen name={"LeaveConfirmation"} component={LeaveConfirmation} />
-            <Stack.Screen name={"Servicedetail"} component={Servicedetail} />
-            <Stack.Screen name={"Reviews"} component={Reviews} />
-            <Stack.Screen name={"Completejob"} component={Completejob} />
-            <Stack.Screen name={"Finalwash"} component={Finalwash} />
-            <Stack.Screen name={"Addonjobdetail"} component={Addonjobdetail} />
-            <Stack.Screen name={"Addonservicedetail"} component={Addonservicedetail} />
-            <Stack.Screen name={"Bookingdetail"} component={Bookingdetail} />
-            <Stack.Screen name={"Refferal"} component={Refferal} />
-            <Stack.Screen name={"Notification"} component={Notification} />
-            <Stack.Screen name={"UpdateBank"} component={UpdateBank} />
-            <Stack.Screen name={"ChatBox"} component={ChatBox} />
-
-        </Stack.Navigator>
-    )
-}
+  return (
+    <Stack.Navigator
+      screenOptions={FadeTransition}
+      // initialRouteName='TestScreen'
+      initialRouteName={loginCheck() ? "Bottomtab" : 'Login'}
+    >
+      <Stack.Group>
+        <Stack.Screen name={'Bottomtab'} component={Bottomtab} />
+        <Stack.Screen name={'Login'} component={Login} />
+        <Stack.Screen name={'OTP'} component={OTP} />
+        <Stack.Screen name={'FetchLocation'} component={FetchLocation} />
+        <Stack.Screen name={'UpdateLocation'} component={UpdateLocation} />
+        <Stack.Screen name={'Home'} component={Home} />
+        <Stack.Screen name={'CleaningService'} component={CleaningService} />
+        {/* <Stack.Screen name={'SelectVehicle'} component={SelectVehicle} /> */}
+        <Stack.Screen name={'RTOService'} component={RTOService} />
+        <Stack.Screen name={'RCTransfer'} component={RCTransfer} />
+        <Stack.Screen name={'RCDocument'} component={RCDocument} />
+        <Stack.Screen name={'Subscription'} component={Subscription} />
+        <Stack.Screen name={'Premium'} component={Premium} />
+        <Stack.Screen name={'TimeSlot'} component={TimeSlot} />
+        <Stack.Screen name={'CustomerDetails'} component={CustomerDetails} />
+        <Stack.Screen name={'Payment'} component={Payment} />
+        <Stack.Screen name={'Coupon'} component={Coupon} />
+        <Stack.Screen name={'PlaceOrder'} component={PlaceOrder} />
+        <Stack.Screen name={'Booking'} component={Booking} />
+        <Stack.Screen name={'OrderHistory'} component={OrderHistory} />
+        <Stack.Screen name={'OrderDetails'} component={OrderDetails} />
+        <Stack.Screen name={'TrackOrder'} component={TrackOrder} />
+        <Stack.Screen name={'Review'} component={Review} />
+        <Stack.Screen name={'OrderActivity'} component={OrderActivity} />
+        <Stack.Screen name={'AddOns'} component={AddOns} />
+        <Stack.Screen name={'PayNow'} component={PayNow} />
+        <Stack.Screen name={'WatchActivity'} component={WatchActivity} />
+        <Stack.Screen name={'OnTimeClean'} component={OnTimeClean} />
+      </Stack.Group>
+      <Stack.Group>
+        <Stack.Screen name={'BiddingRequest'} component={BiddingRequest} />
+        <Stack.Screen name={'BiddingDetails'} component={BiddingDetails} />
+        <Stack.Screen name={'CarScrapping'} component={CarScrapping} />
+        <Stack.Screen name={'ScrappingDetails'} component={ScrappingDetails} />
+        <Stack.Screen name={'ScrapStatus'} component={ScrapStatus} />
+        <Stack.Screen name={'Faq'} component={Faq} />
+        <Stack.Screen name={'DriverOnDemand'} component={DriverOnDemand} />
+        <Stack.Screen name={'TestScreen'} component={TestScreen} />
+        <Stack.Screen name={'OneWayRideScreen'} component={OneWayRideScreen} />
+        <Stack.Screen name={'SearchLocation'} component={SearchLocation} />
+        <Stack.Screen name={'RequestDriver'} component={RequestDriver} />
+        <Stack.Screen name={'ScrapBookingHistory'} component={ScrapBookingHistory} />
+        <Stack.Screen name={'ScrapNotifications'} component={ScrapNotifications} />
+        <Stack.Screen name={'ScrapPostList'} component={ScrapPostList} />
+        <Stack.Screen name={'ScrapPostDetails'} component={ScrapPostDetails} />
+        <Stack.Screen name={'ScrapPickupScheldule'} component={ScrapPickupScheldule} />
+        <Stack.Screen name={'UpdateCertificate'} component={UpdateCertificate} />
+      </Stack.Group>
+      <Stack.Group>
+        <Stack.Screen name={'SubscriptionPlan'} component={SubscriptionPlan} />
+        <Stack.Screen name={'ContactUs'} component={ContactUs} />
+        <Stack.Screen name={'VehicleManage'} component={VehicleManage} />
+        <Stack.Screen name={'ServiceDetail'} component={ServiceDetails} />
+        <Stack.Screen name={'MyAddress'} component={MyAddress} />
+        <Stack.Screen name={'ReferEarn'} component={ReferEarn} />
+        <Stack.Screen name={'MyProfile'} component={MyProfile} />
+        <Stack.Screen
+          name={'CancelSubscription'}
+          component={CancelSubscription}
+        />
+        <Stack.Screen name={'FeedbackRatings'} component={FeedbackRatings} />
+        <Stack.Screen name={'RenewServices'} component={RenewServices} />
+        <Stack.Screen name={'UpgradePlan'} component={UpgradePlan} />
+        <Stack.Screen name={'DailyTracking'} component={DailyTracking} />
+        <Stack.Screen name={'TrackingDetails'} component={TrackingDetails} />
+        <Stack.Screen name={'CleanerAttendance'} component={CleanerAttendance} />
+        <Stack.Screen name={'BookingSuccess'} component={BookingSuccess} />
+        <Stack.Screen name={'BookingDetail'} component={BookingDetail} />
+        <Stack.Screen name={'RiderDetail'} component={RiderDetail} />
+        <Stack.Screen name={'MyRide'} component={MyRide} />
+        <Stack.Screen name={'Notifications'} component={Notifications} />
+        <Stack.Screen name={'RideDetail'} component={RideDetail} />
+        <Stack.Screen name={'RideChatBox'} component={RideChatBox} />
+        <Stack.Screen name={'AddVehicleType'} component={AddVehicleType} />
+        <Stack.Screen name={'Reschedule'} component={Reschedule} />
+        <Stack.Screen name={'CustomerDetail'} component={CustomerDetail} />
+        <Stack.Screen name={'RescheduleUpdate'} component={RescheduleUpdate} />
+        <Stack.Screen name={'HomeNotification'} component={HomeNotification} />
+        <Stack.Screen name={'CleaningServiceDetails'} component={CleaningServiceDetails} />
+        <Stack.Screen name={'ChatBox'} component={ChatBox} />
+        <Stack.Screen name={'LiveLocation'} component={LiveLocation} />
+      </Stack.Group>
+      <Stack.Group>
+        <Stack.Screen name={'FASTagProvider'} component={FASTagProvider} />
+        <Stack.Screen name={'VehicleForm'} component={VehicleForm} />
+        <Stack.Screen name={'Recharge'} component={Recharge} />
+        <Stack.Screen name={'RechargeDetails'} component={RechargeDetails} />
+        <Stack.Screen name={'FASTagStatus'} component={FASTagStatus} />
+      </Stack.Group>
+      <Stack.Group>
+        <Stack.Screen name={'AboutCarigato'} component={AboutCarigato} />
+        <Stack.Screen name={'ServiceQuery'} component={ServiceQuery} />
+        <Stack.Screen name={'Feedback'} component={Feedback} />
+        <Stack.Screen name={'Warrenty'} component={Warrenty} />
+      </Stack.Group>
+      <Stack.Screen name={'DrawerNavigator'} component={DrawerNavigator} />
+      <Stack.Screen name={'ChallanCqPayment'} component={ChallanCqPayment} />
+      <Stack.Screen name={'PaymentSummery'} component={PaymentSummery} />
+      <Stack.Screen name={'PaymentNow'} component={PaymentNow} />
+      <Stack.Screen name={'challanID'} component={challanID} />
+    </Stack.Navigator>
+  );
+};
 
 export default Stacknavigator;

@@ -3,14 +3,14 @@ import { StyleProp, View, ViewProps, ViewStyle } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 import Text from "../../text";
-import VectorIcons from "../../../Utilities/vectoricons";
 import { windowheight, windowwidth } from "../../../Utilities/dimensions";
 import useCustomHooks from "../../../Actions/Hooks/customhook";
 import { Fontsize, Fontfamily, Colors } from "../../../Utilities/uiasset";
 
 import { styles } from "../styles";
 import ThemeContext from "../../../Utilities/themecontext";
-import { DropdownProps } from "react-native-element-dropdown/src/components/Dropdown/model";
+import VectorIcons from "../../../Utilities/vectorIcons";
+import ErrorText from "../../ErrorText";
 
 interface LayoutProps {
     label?: string,
@@ -28,7 +28,11 @@ interface LayoutProps {
     height?: any,
     labelField?: string,
     valueField?: string,
-    inputStyle?: any
+    inputStyle?: any,
+    isValid?: boolean;
+    errorMessage?: any;
+    errorTextContainerStyle?: any;
+    errorTextStyle?: any;
 }
 
 const Layout: React.FC<LayoutProps> = ({
@@ -46,7 +50,11 @@ const Layout: React.FC<LayoutProps> = ({
     height = windowheight * 0.06,
     labelField = "label",
     valueField = "value",
-    inputStyle
+    inputStyle,
+    isValid = true,
+    errorMessage = '',
+    errorTextContainerStyle = {},
+    errorTextStyle = {},
 }) => {
     const theme = themes ?? useContext(ThemeContext)
     const style = styles(theme);
@@ -55,39 +63,43 @@ const Layout: React.FC<LayoutProps> = ({
             {
                 label !== false && (
                     <View style={{ marginBottom: "3%" }}>
-                        <Text style={{ color: theme.secondarytext }}>{label}</Text>
+                        <Text family="GRegular" size="medium">{label}</Text>
                     </View>
                 )
             }
             <Dropdown
-                style={[
-                    theme.theme === "dark"
-                        ? [
-                            style.darkInput,
-                            { backgroundColor: background || Colors.btnBgGray }
-                        ]
-                        : [
-                            style.lightInput,
-                            { backgroundColor: background || "#F5F5F5" }
-                        ],
-                    , { height: height, ...inputStyle }]}
+                style={{
+                    backgroundColor: theme.lightGrey,
+                    borderRadius: 10,
+                    paddingHorizontal: 15,
+                    paddingVertical: 10,
+                    width: '100%',
+                    justifyContent: "center",
+                    position: "relative",
+                    shadowColor: "rgba(0,0,0,0.25)",
+                    shadowOffset: { width: 0, height: 0.5 },
+                    shadowOpacity: 1,
+                    shadowRadius: 2,
+                    elevation: 3,
+                    height: windowheight * 0.06
+                }}
                 placeholderStyle={{
-                    fontSize: Fontsize.semimedium, color: Colors.grey,
-                    fontFamily: Fontfamily.regular,
+                    fontSize: Fontsize.xmedium, color: Colors.grey,
+                    fontFamily: Fontfamily.GRegular,
                 }}
                 selectedTextStyle={{
-                    fontFamily: Fontfamily.regular,
-                    fontSize: Fontsize.semimedium,
-                    color: theme.darktext,
+                    fontFamily: Fontfamily.medium,
+                    fontSize: Fontsize.xmedium,
+                    color: "#323232",
                 }}
                 containerStyle={{
-                    backgroundColor: theme.card,
-                    marginTop: position === "top" ? 0 : -25,
+                    backgroundColor: theme.lightGrey,
+                    // backgroundColor: "#F3F3F3",
+                    // marginTop: position === "top" ? 0 : -25,
                     paddingVertical: 0,
                     marginBottom: 50,
                 }}
-                activeColor={theme.theme === "dark" ? "#2c2f33" : "#dddddd"}
-                data={list.length > 0 ? list : [{ label: "No options", value: null }]}
+                data={list.length > 0 ? list : [{ [labelField ? labelField : "label"]: "No options", value: null }]}
                 search={false}
                 maxHeight={windowheight * 0.4}
                 labelField={labelField}
@@ -109,10 +121,31 @@ const Layout: React.FC<LayoutProps> = ({
                         family={'Ionicons'}
                         name={'chevron-down-outline'}
                         iconcolor={theme.darktext}
-                        size={15}
+                        size={25}
                     />
                 )}
             />
+
+            {!isValid && (
+
+                <ErrorText
+                    errorTextContainerStyle={errorTextContainerStyle}
+                    errorMessage={errorMessage}
+                    errorTextStyle={errorTextStyle}
+                />
+                // <View style={[{ marginTop: 2, marginHorizontal: windowwidth * 0.02 }, errorTextContainerStyle]}>
+                //   <Text
+                //     style={[{
+                //       fontFamily: Fontfamily.GRegular,
+                //       fontSize: Fontsize.medium,
+                //       color: 'red',
+                //     }, errorTextStyle]}
+                //   >
+                //     {errorMessage}
+                //   </Text>
+                // </View>
+            )}
+
         </View>
 
     );

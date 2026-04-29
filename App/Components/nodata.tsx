@@ -1,27 +1,34 @@
-import React from "react"
-import { StyleProp, Text, TextProps, View, ViewProps, ViewStyle } from "react-native"
-import useCustomHooks from "../Actions/Hooks/customhook"
-import Mainview from "./mainview"
-import { Fontfamily, Fontsize } from "../Utilities/uiasset"
+import React from "react";
+import { StyleProp, View, ViewStyle } from "react-native";
+
+import Text from "./text";
+import Lottie from "./lottieview";
+import { lotties } from "../Utilities/images";
 
 interface Nodataprops {
-    viewstyle?: StyleProp<ViewStyle>,
-    textstyle?: StyleProp<TextProps>,
-    title?: string
+    container?: StyleProp<ViewStyle>
+    lottiestyle?: StyleProp<ViewStyle>
+    text?: string,
+
 }
 
 const Nodata: React.FC<Nodataprops> = ({
-    viewstyle,
-    textstyle,
-    title = "No data found"
+    container,
+    lottiestyle,
+    text = "No data found",
 }) => {
-    const { theme } = useCustomHooks()
     return (
-        <View style={[{ flex: 1, justifyContent: "center", alignItems: "center", }, viewstyle]} >
-            <Text style={[{ fontFamily: Fontfamily.regular, color: theme.textinput, fontSize: Fontsize.semimedium }, textstyle]} >{title}</Text>
+        <View style={[{ flex: 1, justifyContent: "center", alignItems: "center", }, container]}  >
+            <Lottie
+                src={lotties.NoData}
+                width={"30%"}
+                height={"30%"}
+                style={lottiestyle}
+            />
+            <Text style={{ textAlign: "center" }}>{text}</Text>
         </View>
     )
 
 }
 
-export default Nodata
+export default Nodata;

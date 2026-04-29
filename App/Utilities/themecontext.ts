@@ -1,7 +1,6 @@
 // themecontext.ts
 import { createContext } from 'react';
-import type { ThemeType } from './theme';
-import theme from './theme';
+import theme, { ThemeType } from './theme';
 
 const defaultTheme: ThemeType = theme.light;
 

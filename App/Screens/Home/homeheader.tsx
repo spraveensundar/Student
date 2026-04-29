@@ -1,69 +1,133 @@
-import { Pressable, View } from "react-native"
-import useCustomHooks from "../../Actions/Hooks/customhook"
-import React from "react"
-import { borderradius, windowheight, windowwidth } from "../../Utilities/dimensions"
-import Images from "../../Utilities/images"
-import VectorIcons from "../../Utilities/vectoricons"
-import { Colors } from "../../Utilities/uiasset"
-import Text from "../../Components/text"
+import React, { useState } from "react";
+import { View, Pressable, TextInput } from 'react-native';
+import useCustomHooks from "../../Actions/Hooks/customhook";
+import FastImage from '@d11/react-native-fast-image';
+import styles from "../Home/styles";
+import { icons, lotties } from "../../Utilities/images";
+import Text from "../../Components/text";
+import VectorIcons from "../../Utilities/vectorIcons";
+import { Colors } from "../../Utilities/uiasset";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import Lottie from "../../Components/lottieview";
+import { windowwidth } from "../../Utilities/dimensions";
+import { isEmpty, loginCheck, toastFn } from "../../Common/commonFunction";
+import { useSelector } from "react-redux";
+
+const HomeHeader: React.FC = () => {
 
 
-interface Homeheaderprops {
+    const userData = useSelector((state:any)=>state?.userData);
 
-}
-const Homeheader: React.FC<Homeheaderprops> = () => {
+
     const { theme, navigation } = useCustomHooks()
-    return (
-        <View style={{ flexDirection: "row", alignItems: "center", height: windowheight * 0.1, justifyContent: "space-around", marginHorizontal: "2.5%" }} >
-            <Pressable style={{ width: "12.5%", height: windowwidth * 0.1, justifyContent: "center", alignItems: "center" }} onPress={() => navigation.navigate("Profile")}>
-                <Images
-                    type="svg"
-                    name={theme.theme == "dark" ? "Menuprofile" : "Menuprofilelight"}
-                    width={windowwidth * 0.065}
-                    height={windowwidth * 0.065}
-                />
-            </Pressable>
+    const style = styles(theme);
 
-            <Pressable style={{ width: "45%", height: windowheight * 0.05, backgroundColor: theme.card, alignItems: "center", borderRadius: borderradius * 1, flexDirection: "row", paddingHorizontal: "5%" }} >
+    
+    const [serviceSearch, setServiceSearch] = useState<string>('');
+    
+
+    const handleServiceSearch = (text: string) => {
+        setServiceSearch(text);
+    }
+
+    const noAccessRedirect = (navigateTo: any) => {
+        if (navigateTo) {
+            if (loginCheck()) {
+                return navigation.navigate(navigateTo);
+            }
+            toastFn("Login to view this");
+            return navigation.navigate("Login", { redirectTo: navigateTo });
+        }
+    }
+
+    console.log('userDatauserData',userData)
+
+    return (
+        <View style={style.homeHeaderContainer}>
+            <View style={style.topRow}>
+                <View style={style.leftSection}>
+                    {/* <FastImage
+                        style={style.log}
+                        source={icons.Log}
+                    /> */}
+                    <Pressable
+                        onPress={() => navigation.navigate("MyAddress")}
+                    >
+                        <View>
+                            <Lottie
+                                src={lotties.locationpin}
+                                style={style.log}
+                            />
+                        </View>
+                    </Pressable>
+                    {/* <Lottie
+                        src={lotties.locationpin}
+                        style={style.log}
+                    /> */}
+                    <Pressable
+                        onPress={() => navigation.navigate("MyAddress")}
+                    >
+                        {
+                            isEmpty(userData?.currentAddress)
+                                ?
+                                <>
+                                    <View style={{ flexDirection: 'column' }}>
+                                        <Text color="white" family="medium" size="semimedium">Choose location</Text>
+                                        <Pressable style={style.locationPress}>
+                                        </Pressable>
+                                    </View>
+                                </>
+                                :
+                                <>
+
+                                    <View style={{ flexDirection: 'column' }}>
+                                        <Text color="white" family="medium" size="semimedium">{userData?.currentAddress?.city}</Text>
+                                        <Pressable style={style.locationPress}>
+                                            <VectorIcons
+                                                iconcolor="white"
+                                                family="Ionicons"
+                                                name="chevron-down"
+                                                size={windowwidth * 0.04}
+                                            />
+                                            <Text color="white" size="semimedium">
+                                                {userData?.currentAddress?.sector ? `${userData?.currentAddress?.sector}, ` : ""}{userData?.currentAddress?.city}
+                                            </Text>
+                                        </Pressable>
+                                    </View>
+                                </>
+                        }
+                    </Pressable>
+
+                    
+                </View>
+
+                <Pressable style={style.notification} onPress={() => noAccessRedirect("HomeNotification")}>
+                    <FontAwesome5Icon
+                        name="bell"
+                        size={20}
+                        color={theme.btnColor}
+                        solid
+                    />
+                </Pressable>
+            </View>
+            <Text color={Colors.yellow} size="semilarge">How can I help you today?</Text>
+            <View style={style.searchContainer}>
                 <VectorIcons
                     family="Feather"
-                    name={"search"}
-                    size={windowwidth * 0.045}
-                    iconcolor={Colors.grey}
+                    name="search" size={20}
+                    iconcolor={Colors.lightGreyy}
                 />
-                <Text style={{ color: Colors.grey, marginLeft: "5%" }} size="semimedium" >INR / USDT</Text>
-            </Pressable>
-
-            <Pressable onPress={() => navigation.navigate('Deposit')} style={{ width: "12.5%", height: windowwidth * 0.1, justifyContent: "center", alignItems: "center" }} >
-                <VectorIcons
-                    family="MaterialDesignIcons"
-                    name={"wallet-bifold-outline"}
-                    size={windowwidth * 0.07}
-                    iconcolor={theme.inversetext}
+                <TextInput
+                    style={style.searchInput}
+                    placeholder="looking for a service"
+                    placeholderTextColor={Colors.lightGreyy}
+                    value={serviceSearch}
+                    onChangeText={handleServiceSearch}
                 />
-            </Pressable>
-
-            <Pressable onPress={() => navigation.navigate('QRcodeScanner')} style={{ width: "12.5%", height: windowwidth * 0.1, justifyContent: "center", alignItems: "center" }} >
-                <VectorIcons
-                    family="MaterialDesignIcons"
-                    name={"line-scan"}
-                    size={windowwidth * 0.055}
-                    iconcolor={theme.inversetext}
-                />
-            </Pressable>
-
-            <Pressable onPress={() => navigation.navigate('Notification')} style={{ width: "12.5%", height: windowwidth * 0.1, justifyContent: "center", alignItems: "center" }} >
-                <VectorIcons
-                    family="Ionicons"
-                    name={"notifications"}
-                    size={windowwidth * 0.055}
-                    iconcolor={theme.inversetext}
-                />
-                <View style={{ width: 10, height: 10, backgroundColor: "#FF4130", position: "absolute", borderRadius: borderradius * 5, top: 0, right: "30%" }} />
-            </Pressable>
+            </View>
         </View>
-    )
 
+    )
 }
 
-export default Homeheader
+export default HomeHeader;

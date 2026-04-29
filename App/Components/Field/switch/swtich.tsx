@@ -3,7 +3,6 @@ import { StyleProp, TextStyle, ViewStyle } from "react-native";
 import SwitchToggle from "react-native-switch-toggle";
 import { borderradius, windowheight, windowwidth } from "../../../Utilities/dimensions";
 import { Colors } from "../../../Utilities/uiasset";
-import useCustomHooks from "../../../Actions/Hooks/customhook";
 
 interface Props {
     testID?: string;
@@ -42,29 +41,24 @@ const Switch: React.FC<Switchprops> = ({
     onPress,
     props
 }) => {
-    const { theme } = useCustomHooks()
+
     return (
         <SwitchToggle
             switchOn={value}
             onPress={onPress}
             containerStyle={{
-                width: windowwidth * 0.1325,
-                height: windowheight * 0.031,
-                borderRadius: borderradius * 3,
-                borderWidth: 0.5,
-                borderColor: "#CFCFCF"
+                width:windowwidth*0.135,
+                height:windowheight*0.0325,
+                borderRadius:borderradius*3,
+                
             }}
             circleStyle={{
-                width: windowwidth * 0.0475,
-                height: windowwidth * 0.0475,
-                borderRadius: borderradius * 5,
-                left: !value ? windowwidth * 0.01 : (-windowwidth * 0.01),
+                width: windowwidth*0.0425,
+                height: windowwidth*0.0425,
+                borderRadius: borderradius*5,
+                left: !value ?  windowwidth*0.02 : (-windowwidth*0.02)
             }}
             backgroundColorOn={Colors.primary}
-            backgroundColorOff="#F3F3F3"
-            circleColorOff={theme.background}
-            circleColorOn={theme.background}
-
             {...props}
         />
     )

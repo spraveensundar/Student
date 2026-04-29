@@ -1,56 +1,60 @@
-import React from "react"
-import { Pressable, StyleSheet, View } from "react-native"
-import useCustomHooks from "../Actions/Hooks/customhook"
-import Flexcomponent from "./flexcomponent"
-import Text from "./text"
-import { windowheight, windowwidth } from "../Utilities/dimensions"
+import Flexcomponent from "./flexcomponent";
+import { Pressable, StyleProp, ViewStyle } from "react-native";
+import { borderradius } from "../Utilities/dimensions";
+import { Colors } from "../Utilities/uiasset";
+import Text from "./text";
+import useCustomHooks from "../Actions/Hooks/customhook";
 
-interface Toptabsprops {
-    width?: any,
-    top?: any,
-    tabs: any,
+interface TopTabsprops {
+    tabs: string[],
+    onchange: (value: number) => void,
+    containerstyle?: StyleProp<ViewStyle>,
     activeindex: number,
-    onchangeindex: (index: number) => void
+    width?: any,
+    paddingvertical?: any
 }
 
-const Toptabs: React.FC<Toptabsprops> = ({
-    width = windowwidth,
-    top,
-    tabs=[],
-    activeindex = 0,
-    onchangeindex
-
+const TopTabs: React.FC<TopTabsprops> = ({
+    tabs,
+    onchange,
+    containerstyle,
+    activeindex,
+    width = 100,
+    paddingvertical = "4%"
 }) => {
     const { theme } = useCustomHooks()
-    const styles = style(theme, tabs)
+    const overallwidth = width + "%"
+    const containerwidth: any = ((100 / tabs.length) * 0.95) + "%"
     return (
-        <Flexcomponent justifyContent="space-around" width={width} style={{ alignSelf: "center", borderBottomWidth: 1, borderBottomColor: theme.boderColor, height: windowheight * 0.065, marginTop:top }} >
-            {tabs?.map((e:any, i:number) => (
-                <Pressable onPress={() => onchangeindex(i)} style={activeindex == i ? styles.activetab : styles.inactivetab} >
-                    <Text color={activeindex == i ? theme.tabactive : "#797979"} >{e}</Text>
-                </Pressable>
-            ))}
+        <Flexcomponent
+            width={overallwidth}
+            justifyContent="space-between"
+            paddingVertical={"2.5%"}
+            style={[containerstyle]}
+        >
+            {tabs?.map((e: string, index: number) => (
+                <Pressable
+                    onPress={() => onchange(index)}
+                    style={{
+                        width: containerwidth,
+                        paddingVertical: paddingvertical,
+                        paddingHorizontal: "5%",
+                        backgroundColor: (activeindex === index) ? Colors.primary : theme.card,
+                        borderRadius: borderradius * 5,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderWidth: index !== activeindex ? 0.5 : 0,
+                        borderColor: "#CFCFCF"
+                    }} >
+                    <Text
+                        family="GMedium"
+                        size="medium"
+                        color={activeindex === index ? "#ffff" : theme.primarytext}
+                    >{e}</Text>
+                </Pressable>))
+            }
         </Flexcomponent>
     )
-
 }
 
-export default Toptabs
-
-
-const style = (theme: any, tabs: any) => StyleSheet.create({
-    activetab: {
-        width: (windowwidth / tabs?.length) * 0.9,
-        alignItems: "center",
-        justifyContent: "center",
-        borderBottomWidth: 1,
-        borderBottomColor: theme.tabactive,
-        height: "100%"
-    },
-    inactivetab: {
-        width: (windowwidth / tabs?.length) * 0.9,
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%"
-    }
-})
+export default TopTabs

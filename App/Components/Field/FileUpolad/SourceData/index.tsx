@@ -3,7 +3,6 @@ import { View } from 'react-native';
 
 import Item from './Item';
 import { sorceData } from '../Picker/Helper';
-import Text from '../../../text';
 
 type SourceDataProps = {
     pickableSource?: (source: 'camera' | 'gallery' | 'document' | string) => void;

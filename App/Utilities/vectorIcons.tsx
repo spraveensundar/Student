@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -10,11 +9,8 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
-import Lucide from '@react-native-vector-icons/lucide';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { ColorValue, ViewStyle } from 'react-native';
-import useCustomHooks from '../Actions/Hooks/customhook';
-import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
-import { Fontisto } from '@react-native-vector-icons/fontisto';
 
 import ThemeContext from './themecontext';
 
@@ -32,7 +28,7 @@ type IconFamily =
   | 'Feather'
   | 'Fontisto'
   | 'MaterialDesignIcons'
-  | 'Lucide'
+  | 'Lucide';
 
 export interface VectorIconsProps {
   family: IconFamily;
@@ -47,39 +43,51 @@ const VectorIcons: React.FC<VectorIconsProps> = ({
   name,
   size = 24,
   iconcolor,
-  style
+  style,
 }) => {
-  const theme = useContext(ThemeContext)
-  const color = iconcolor || theme.primarytext
+  const theme = useContext(ThemeContext);
+  const color = iconcolor || theme.primarytext;
   switch (family) {
     case 'AntDesign':
       return <AntDesign name={name} size={size} color={color} style={style} />;
     case 'FontAwesome':
-      return <FontAwesome name={name} size={size} color={color} style={style} />;
+      return (
+        <FontAwesome name={name} size={size} color={color} style={style} />
+      );
     case 'FontAwesome5':
-      return <FontAwesome5 name={name} size={size} color={color} style={style} />;
-    case 'FontAwesome6':
-      return <FontAwesome6 name={name} size={size} color={color} style={style} />;
+      return (
+        <FontAwesome5 name={name} size={size} color={color} style={style} />
+      );
     case 'Ionicons':
       return <Ionicons name={name} size={size} color={color} style={style} />;
-    case 'MaterialCommunityIcons':
-      return <MaterialCommunityIcons name={name} size={size} color={color} style={style} />;
+
     case 'MaterialIcons':
-      return <MaterialIcons name={name} size={size} color={color} style={style} />;
+      return (
+        <MaterialIcons name={name} size={size} color={color} style={style} />
+      );
     case 'Octicons':
       return <Octicons name={name} size={size} color={color} style={style} />;
     case 'SimpleLineIcons':
-      return <SimpleLineIcons name={name} size={size} color={color} style={style} />;
+      return (
+        <SimpleLineIcons name={name} size={size} color={color} style={style} />
+      );
     case 'Entypo':
       return <Entypo name={name} size={size} color={color} style={style} />;
     case 'Feather':
       return <Feather name={name} size={size} color={color} style={style} />;
-    case 'Fontisto':
-      return <Fontisto name={name} size={size} color={color} style={style} />;
-    case 'MaterialDesignIcons':
-      return <MaterialDesignIcons name={name} size={size} color={color} style={style} />;
-    case 'Lucide':
-      return <Lucide name={name} size={size} color={color} style={style} />;
+    case 'FontAwesome6':
+      return (
+        <FontAwesome6 name={name} size={size} color={color} style={style} />
+      );
+    case 'MaterialCommunityIcons':
+      return (
+        <MaterialCommunityIcons
+          name={name}
+          size={size}
+          color={color}
+          style={style}
+        />
+      );
     default:
       return null;
   }
